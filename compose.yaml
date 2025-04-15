@@ -1,0 +1,9 @@
+services:
+  webserver:
+    image: ranckosolutionsinc/upload-files-app:v1.0
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/home/static
+      - ./httpd.conf:/home/static/httpd.conf:ro

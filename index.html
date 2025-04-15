@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Locci Drive</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+<style>
+  /* Theme color palettes */
+  :root {
+    /* Default theme (original) */
+    --bg: #ffffff;
+    --bg-soft: #f9fafb;
+    --bg-light: #f3f4f6;
+    --fg: #111827;
+    --fg-muted: #6b7280;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --primary-fg: #ffffff;
+    --accent: #eff6ff;
+    --accent-fg: #1e40af;
+    --border: #e5e7eb;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --shadow-dark: rgba(0, 0, 0, 0.2);
+  }
+
+  /* Gruvbox Light Theme - Ensuring all elements have yellowish theme */
+  .theme-gruvbox-light {
+    --bg: #fbf1c7;
+    --bg-soft: #f2e5bc;
+    --bg-light: #ebdbb2;
+    --fg: #3c3836;
+    --fg-muted: #7c6f64;
+    --primary: #689d6a;
+    --primary-hover: #427b58;
+    --primary-fg: #fbf1c7;
+    --accent: #d5c4a1;
+    --accent-fg: #3c3836;
+    --border: #d5c4a1;
+    --shadow: rgba(60, 56, 54, 0.1);
+    --shadow-dark: rgba(60, 56, 54, 0.2);
+    --upload-bg: #fbf1c7;
+    --table-header-bg: #ebdbb2;
+    --file-item-bg: #fbf1c7;
+    --file-item-hover: #ebdbb2;
+    --modal-bg: #fbf1c7;
+    --input-bg: #ebdbb2;
+    --button-bg: #689d6a;
+    --button-hover: #427b58;
+    --button-text: #fbf1c7;
+    --error-color: #cc241d;
+    --navbar-bg: #f2e5bc;
+    --navbar-fg: #3c3836;
+    --navbar-button-hover: #ebdbb2;
+    --navbar-button-active: #d5c4a1;
+    --sidebar-active-bg: #d5c4a1;
+    --sidebar-active-fg: #3c3836;
+    --white-button-bg: #f2e5bc;
+    --white-button-hover: #ebdbb2;
+    --white-button-border: #d5c4a1;
+    --white-button-text: #3c3836;
+    --user-button-bg: #689d6a;
+    --user-button-text: #fbf1c7;
+  }
+
+  /* Gruvbox Dark Theme - Ensuring all elements are dark */
+  .theme-gruvbox-dark {
+    --bg: #282828;
+    --bg-soft: #32302f;
+    --bg-light: #3c3836;
+    --fg: #ebdbb2;
+    --fg-muted: #a89984;
+    --primary: #689d6a;
+    --primary-hover: #8ec07c;
+    --primary-fg: #282828;
+    --accent: #504945;
+    --accent-fg: #ebdbb2;
+    --border: #504945;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --shadow-dark: rgba(0, 0, 0, 0.5);
+    --upload-bg: #32302f;
+    --table-header-bg: #3c3836;
+    --file-item-bg: #282828;
+    --file-item-hover: #3c3836;
+    --modal-bg: #282828;
+    --input-bg: #3c3836;
+    --button-bg: #689d6a;
+    --button-hover: #8ec07c;
+    --button-text: #282828;
+    --error-color: #fb4934;
+    --navbar-bg: #282828;
+    --navbar-fg: #ebdbb2;
+    --navbar-button-hover: #3c3836;
+    --navbar-button-active: #504945;
+    --sidebar-active-bg: #504945;
+    --sidebar-active-fg: #ebdbb2;
+    --white-button-bg: #3c3836;
+    --white-button-hover: #504945;
+    --white-button-border: #504945;
+    --white-button-text: #ebdbb2;
+    --user-button-bg: #689d6a;
+    --user-button-text: #282828;
+  }
+
+  body {
+    background-color: var(--bg-soft);
+    color: var(--fg);
+  }
+
+  /* Header styles */
+  header {
+    background-color: var(--navbar-bg) !important;
+    color: var(--navbar-fg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  header .rounded-full:hover {
+    background-color: var(--navbar-button-hover) !important;
+  }
+
+  header .text-gray-600 {
+    color: var(--navbar-fg);
+  }
+
+  /* Search input in header */
+  header input {
+    background-color: var(--input-bg);
+    color: var(--fg);
+    border-color: var(--border);
+  }
+
+  header input::placeholder {
+    color: var(--fg-muted);
+  }
+
+  /* User button in header */
+  header .rounded-full.bg-blue-500 {
+    background-color: var(--user-button-bg);
+    color: var(--user-button-text);
+  }
+
+  /* White buttons */
+  .bg-white {
+    background-color: var(--white-button-bg);
+  }
+
+  .hover\:bg-gray-100:hover {
+    background-color: var(--white-button-hover) !important;
+  }
+
+  .border-gray-300 {
+    border-color: var(--white-button-border);
+  }
+
+  .text-gray-800 {
+    color: var(--white-button-text);
+  }
+
+  /* Sidebar active item */
+  .bg-blue-50 {
+    background-color: var(--sidebar-active-bg) !important;
+  }
+
+  .text-blue-700 {
+    color: var(--sidebar-active-fg) !important;
+  }
+
+  .loading-spinner {
+    width: 30px;
+    height: 30px;
+    border: 4px solid var(--primary);
+    border-top: 4px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  .drag-over {
+    background-color: var(--bg-light);
+    border-color: var(--primary);
+  }
+  
+  .file-item:hover {
+    background-color: var(--file-item-hover);
+  }
+  
+  .modal {
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Toggle switch styles */
+  .toggle-checkbox:checked {
+    right: 0;
+    border-color: var(--primary);
+  }
+  .toggle-checkbox:checked + .toggle-label {
+    background-color: var(--primary);
+  }
+  .toggle-label {
+    transition: background-color 0.2s ease;
+  }
+
+  /* Improved sidebar transitions */
+  #sidebar {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, width;
+    background-color: var(--bg);
+    border-right: 1px solid var(--border);
+  }
+  
+  #sidebar.collapsed {
+    width: 4rem;
+  }
+  
+  #sidebar.collapsed .sidebar-text,
+  #sidebar.collapsed .storage-info {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  #sidebar:not(.collapsed) .sidebar-text,
+  #sidebar:not(.collapsed) .storage-info {
+    opacity: 1;
+    transition: opacity 0.3s ease 0.1s;
+  }
+  
+  #sidebar.collapsed .nav-icon {
+    margin-right: 0;
+    transition: margin 0.3s ease;
+  }
+  
+  #sidebar:not(.collapsed) .nav-icon {
+    margin-right: 0.75rem;
+    transition: margin 0.3s ease;
+  }
+  
+  /* Center icons in collapsed sidebar */
+  #sidebar.collapsed .nav-link {
+    justify-content: center;
+    transition: justify-content 0.3s ease;
+  }
+  
+  #sidebar.collapsed .new-btn-icon {
+    margin-right: 0;
+    transition: margin 0.3s ease;
+  }
+  
+  #sidebar:not(.collapsed) .new-btn-icon {
+    margin-right: 0.5rem;
+    transition: margin 0.3s ease;
+  }
+  
+  #sidebar.collapsed #new-file-btn {
+    justify-content: center;
+    transition: justify-content 0.3s ease;
+  }
+  
+  /* Hide sidebar header on desktop */
+  @media (min-width: 769px) {
+    .sidebar-header {
+      display: none;
+    }
+    
+    #sidebar {
+      padding-top: 1rem;
+    }
+  }
+  
+  /* Mobile sidebar styles */
+  @media (max-width: 768px) {
+    #sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      z-index: 40;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 280px;
+      box-shadow: 0 4px 6px -1px var(--shadow), 0 2px 4px -1px var(--shadow);
+    }
+    
+    #sidebar.open {
+      transform: translateX(0);
+    }
+    
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 30;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    /* Mobile dropdown menu */
+    #mobile-file-menu {
+      position: static;
+      width: 100%;
+      box-shadow: none;
+      border-radius: 0;
+      margin-top: 0.5rem;
+      background-color: var(--bg-light);
+    }
+  }
+
+  /* Main content padding when sidebar is open */
+  @media (min-width: 769px) {
+    .main-content {
+      transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      width: calc(100% - 4rem);
+      margin-left: 4rem;
+    }
+    
+    .sidebar-open .main-content {
+      width: calc(100% - 16rem);
+      margin-left: 16rem;
+    }
+    
+    #sidebar {
+      position: fixed;
+      height: 100vh;
+      z-index: 10;
+    }
+    
+    #sidebar.collapsed {
+      width: 4rem;
+    }
+    
+    #sidebar:not(.collapsed) {
+      width: 16rem;
+    }
+  }
+
+  /* Mobile dropdown menu */
+  .mobile-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 220px;
+    background-color: var(--bg);
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px var(--shadow), 0 4px 6px -2px var(--shadow);
+    z-index: 20;
+    display: none;
+  }
+
+  .mobile-dropdown.show {
+    display: block;
+  }
+  
+  /* Settings modal styles */
+  #settings-modal {
+    overflow-y: auto;
+  }
+  
+  .settings-container {
+    max-height: 90vh;
+    overflow-y: auto;
+    width: 90%;
+    max-width: 500px;
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+  }
+  
+  @media (min-width: 640px) {
+    .settings-container {
+      width: 80%;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .settings-container {
+      width: 70%;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .settings-container {
+      width: 50%;
+    }
+  }
+
+  /* Upload box styles */
+  #upload-box {
+    background-color: var(--upload-bg);
+    border-color: var(--primary);
+  }
+
+  /* Theme-specific overrides */
+  .bg-white {
+    background-color: var(--bg);
+  }
+  
+  .bg-gray-50 {
+    background-color: var(--bg-soft);
+  }
+  
+  .bg-gray-100 {
+    background-color: var(--bg-light);
+  }
+  
+  .bg-blue-50 {
+    background-color: var(--accent);
+  }
+  
+  .bg-blue-500 {
+    background-color: var(--primary);
+  }
+  
+  .bg-blue-600 {
+    background-color: var(--primary);
+  }
+  
+  .bg-blue-700 {
+    background-color: var(--primary-hover);
+  }
+  
+  .hover\:bg-blue-50:hover {
+    background-color: var(--accent);
+  }
+  
+  .hover\:bg-blue-700:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  .hover\:bg-gray-100:hover {
+    background-color: var(--bg-light);
+  }
+  
+  .hover\:bg-gray-200:hover {
+    background-color: var(--navbar-button-hover) !important;
+  }
+  
+  .text-gray-500 {
+    color: var(--fg-muted);
+  }
+  
+  .text-gray-600 {
+    color: var(--fg-muted);
+  }
+  
+  .text-gray-700 {
+    color: var(--fg);
+  }
+  
+  .text-gray-800 {
+    color: var(--fg);
+  }
+  
+  .text-blue-500 {
+    color: var(--primary);
+  }
+  
+  .text-blue-600 {
+    color: var(--primary);
+  }
+  
+  .text-blue-700 {
+    color: var(--primary);
+  }
+  
+  .text-red-500 {
+    color: var(--error-color);
+  }
+  
+  .text-white {
+    color: var(--primary-fg);
+  }
+  
+  .border-gray-100 {
+    border-color: var(--border);
+  }
+  
+  .border-gray-200 {
+    border-color: var(--border);
+  }
+  
+  .border-gray-300 {
+    border-color: var(--border);
+  }
+  
+  .border-blue-300 {
+    border-color: var(--primary);
+  }
+  
+  .border-blue-400 {
+    border-color: var(--primary);
+  }
+  
+  .border-blue-500 {
+    border-color: var(--primary);
+  }
+  
+  .shadow {
+    box-shadow: 0 1px 3px 0 var(--shadow), 0 1px 2px 0 var(--shadow);
+  }
+  
+  .shadow-md {
+    box-shadow: 0 4px 6px -1px var(--shadow), 0 2px 4px -1px var(--shadow);
+  }
+  
+  .shadow-lg {
+    box-shadow: 0 10px 15px -3px var(--shadow), 0 4px 6px -2px var(--shadow);
+  }
+  
+  .shadow-xl {
+    box-shadow: 0 20px 25px -5px var(--shadow), 0 10px 10px -5px var(--shadow);
+  }
+  
+  input, select {
+    background-color: var(--input-bg);
+    color: var(--fg);
+    border-color: var(--border);
+  }
+  
+  input:focus, select:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(var(--primary), 0.3);
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--fg-muted);
+  }
+
+  /* File list styles */
+  #list-view {
+    background-color: var(--bg);
+  }
+
+  #list-view .file-item {
+    background-color: var(--file-item-bg);
+  }
+
+  #list-view .file-item:hover {
+    background-color: var(--file-item-hover);
+  }
+
+  #list-view .table-header {
+    background-color: var(--table-header-bg);
+  }
+
+  /* Login screen */
+  #login-screen .bg-white {
+    background-color: var(--bg);
+  }
+
+  #login-screen .text-blue-600 {
+    color: var(--primary);
+  }
+
+  #login-screen .text-gray-600 {
+    color: var(--fg-muted);
+  }
+
+  #login-screen .text-gray-700 {
+    color: var(--fg);
+  }
+
+  #login-screen .text-gray-800 {
+    color: var(--fg);
+  }
+
+  #login-screen .bg-blue-600 {
+    background-color: var(--primary);
+  }
+
+  #login-screen .hover\:bg-blue-700:hover {
+    background-color: var(--primary-hover);
+  }
+
+  /* File menu */
+  #file-menu, #mobile-file-menu, #context-menu {
+    background-color: var(--bg);
+  }
+
+  #file-menu a, #mobile-file-menu a, #context-menu a {
+    color: var(--fg);
+  }
+
+  #file-menu a:hover, #mobile-file-menu a:hover, #context-menu a:hover {
+    background-color: var(--bg-light);
+  }
+
+  #file-menu .text-gray-600, #mobile-file-menu .text-gray-600, #context-menu .text-gray-600 {
+    color: var(--fg-muted);
+  }
+
+  #file-menu .text-gray-700, #mobile-file-menu .text-gray-700, #context-menu .text-gray-700 {
+    color: var(--fg);
+  }
+
+  /* New button */
+  #new-file-btn {
+    background-color: var(--white-button-bg);
+    color: var(--white-button-text);
+    border-color: var(--white-button-border);
+  }
+
+  #new-file-btn:hover {
+    background-color: var(--white-button-hover);
+  }
+
+  #new-file-btn .text-gray-600 {
+    color: var(--fg-muted);
+  }
+</style>
+</head>
+<body class="min-h-screen">
+  <div id="app">
+    <!-- Login Screen -->
+    <div id="login-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-6">
+      <div class="w-full max-w-md">
+        <div class="mb-8 text-center">
+          <h1 class="text-4xl font-bold text-blue-600">Locci Drive</h1>
+          <p class="text-gray-600 mt-2">Secure cloud storage for your files</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-8">
+          <h2 class="text-2xl font-bold mb-6 text-gray-800">Sign In</h2>
+          
+          <form id="login-form" class="space-y-4">
+            <div>
+              <label for="email" class="block text-gray-700 mb-1">Email</label>
+              <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email" required />
+            </div>
+            
+            <div>
+              <label for="password" class="block text-gray-700 mb-1">Password</label>
+              <input type="password" id="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your password" required />
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <input type="checkbox" id="remember" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+                <label for="remember" class="ml-2 block text-gray-700">Remember me</label>
+              </div>
+              <a href="#" class="text-blue-600 hover:underline">Forgot password?</a>
+            </div>
+            
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Sign In</button>
+          </form>
+          
+          <div class="mt-4 text-center">
+            <p class="text-gray-600">Don't have an account? <a href="#" class="text-blue-600 hover:underline">Sign up</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main App Layout -->
+    <div id="main-app" class="hidden">
+      <!-- Sidebar Overlay (Mobile) -->
+      <div id="sidebar-overlay" class="sidebar-overlay"></div>
+      
+      <!-- Header -->
+      <header class="shadow-sm sticky top-0 z-10">
+        <div class="flex items-center justify-between px-4 py-2">
+          <div class="flex items-center relative">
+            <button id="menu-toggle" class="p-2 rounded-full hover:bg-gray-200 mr-2">
+              <i class="fas fa-bars text-gray-600"></i>
+            </button>
+            <div class="flex items-center">
+              <span class="text-blue-600 font-bold text-xl">Locci</span>
+              <span class="text-gray-700 font-bold text-xl">Drive</span>
+            </div>
+          </div>
+          
+          <div class="flex-1 px-4 max-w-2xl">
+            <div class="relative">
+              <input type="text" placeholder="Search in Drive" class="w-full rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-blue-500" />
+              <i class="fas fa-search absolute left-3 top-3 text-gray-500"></i>
+            </div>
+          </div>
+          
+          <div class="flex items-center">
+            <button class="p-2 rounded-full hover:bg-gray-200 mx-1">
+              <i class="fas fa-th text-gray-600"></i>
+            </button>
+            <button id="settings-button" class="p-2 rounded-full hover:bg-gray-200 mx-1">
+              <i class="fas fa-cog text-gray-600"></i>
+            </button>
+            <button id="user-menu-button" class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center mx-1">
+              <span>U</span>
+            </button>
+          </div>
+        </div>
+      </header>
+      
+      <div class="flex">
+        <!-- Sidebar -->
+        <div id="sidebar" class="w-64 transition-all duration-300">
+          <!-- Sidebar Header (Mobile only) -->
+          <div class="sidebar-header">
+            <div class="flex items-center">
+              <span class="text-blue-600 font-bold text-xl">Locci</span>
+              <span class="text-gray-700 font-bold text-xl">Drive</span>
+            </div>
+            <button id="close-sidebar" class="p-2 rounded-full hover:bg-gray-200">
+              <i class="fas fa-times text-gray-600"></i>
+            </button>
+          </div>
+          
+          <div class="p-4">
+            <div class="relative">
+              <button id="new-file-btn" class="font-semibold py-2 px-4 border rounded shadow-sm w-full flex items-center justify-center">
+                <i class="fas fa-plus mr-2 new-btn-icon"></i> <span class="sidebar-text">New</span>
+              </button>
+              
+              <!-- Mobile File Menu (inside sidebar) -->
+              <div id="mobile-file-menu" class="hidden rounded-lg shadow-sm w-full">
+                <ul class="py-2">
+                  <li>
+                    <label for="file-input-mobile" class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      <i class="fas fa-file-upload mr-3"></i>
+                      <span>File upload</span>
+                      <input type="file" id="file-input-mobile" multiple hidden />
+                    </label>
+                  </li>
+                  <li>
+                    <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                      <i class="fas fa-folder mr-3"></i>
+                      <span>Folder upload</span>
+                    </a>
+                  </li>
+                  <li class="border-t">
+                    <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                      <i class="fas fa-folder-plus mr-3"></i>
+                      <span>New folder</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                      <i class="fas fa-file-alt mr-3"></i>
+                      <span>New document</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <nav class="mt-6">
+              <ul>
+                <li class="mb-1">
+                  <a href="#" id="my-drive-link" class="nav-link flex items-center px-4 py-2 bg-blue-50 rounded-lg text-blue-700">
+                    <i class="fas fa-hdd mr-3 text-blue-500 nav-icon"></i>
+                    <span class="sidebar-text">My Drive</span>
+                  </a>
+                </li>
+                <li class="mb-1">
+                  <a href="#" class="nav-link flex items-center px-4 py-2 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-desktop mr-3 text-gray-500 nav-icon"></i>
+                    <span class="sidebar-text">Computers</span>
+                  </a>
+                </li>
+                <li class="mb-1">
+                  <a href="#" class="nav-link flex items-center px-4 py-2 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-user-friends mr-3 text-gray-500 nav-icon"></i>
+                    <span class="sidebar-text">Shared with me</span>
+                  </a>
+                </li>
+                <li class="mb-1">
+                  <a href="#" class="nav-link flex items-center px-4 py-2 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-clock mr-3 text-gray-500 nav-icon"></i>
+                    <span class="sidebar-text">Recent</span>
+                  </a>
+                </li>
+                <li class="mb-1">
+                  <a href="#" class="nav-link flex items-center px-4 py-2 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-star mr-3 text-gray-500 nav-icon"></i>
+                    <span class="sidebar-text">Starred</span>
+                  </a>
+                </li>
+                <li class="mb-1">
+                  <a href="#" class="nav-link flex items-center px-4 py-2 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-trash mr-3 text-gray-500 nav-icon"></i>
+                    <span class="sidebar-text">Trash</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+            
+            <div class="mt-6 pt-6 border-t border-gray-200 storage-info">
+              <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+                <span>Storage</span>
+                <span>5.5 GB of 15 GB used</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-500 h-2 rounded-full" style="width: 36.7%"></div>
+              </div>
+              <button class="mt-4 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded">Buy storage</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="flex-1 overflow-auto main-content">
+          <div class="p-6">
+            <div class="mb-6">
+              <h2 class="text-xl font-semibold text-gray-800">My Drive</h2>
+            </div>
+            
+            <!-- Upload Area -->
+            <div id="upload-container" class="mb-8">
+              <label for="file-input" id="upload-box" class="border-2 border-dashed border-blue-400 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer hover:bg-blue-50 transition duration-300">
+                <input type="file" id="file-input" multiple hidden />
+                <div class="text-blue-500 mb-2">
+                  <i class="fas fa-cloud-upload-alt text-3xl"></i>
+                </div>
+                <p class="text-gray-700 text-center">
+                  <span class="font-medium">Drag & Drop files</span> or <span class="text-blue-500 font-medium" id="click-to-upload">Click to Upload</span>
+                </p>
+                <p class="text-gray-500 text-sm mt-1">Maximum file size: 15MB</p>
+                <div id="loading-spinner" class="loading-spinner mt-3 hidden"></div>
+                <p id="error-message" class="text-red-500 text-sm mt-2 hidden"></p>
+              </label>
+            </div>
+            
+            <!-- Files List -->
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-700">Files</h3>
+                <div class="flex">
+                  <button id="list-view-btn" class="p-2 rounded hover:bg-gray-100 text-blue-500">
+                    <i class="fas fa-list"></i>
+                  </button>
+                  <button id="grid-view-btn" class="p-2 rounded hover:bg-gray-100 text-gray-500">
+                    <i class="fas fa-th"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- List View -->
+              <div id="list-view" class="rounded-lg shadow overflow-hidden">
+                <div class="px-4 py-3 border-b border-gray-200 text-sm font-medium text-gray-500 grid grid-cols-12 gap-4 table-header">
+                  <div class="col-span-6">Name</div>
+                  <div class="col-span-2">Size</div>
+                  <div class="col-span-3">Modified</div>
+                  <div class="col-span-1">Actions</div>
+                </div>
+                
+                <div id="files-container">
+                  <!-- Files will be populated dynamically -->
+                </div>
+              </div>
+              
+              <!-- Grid View (Hidden by default) -->
+              <div id="grid-view" class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                <!-- Grid view items will be populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Settings Modal -->
+      <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4">
+        <div class="rounded-lg shadow-xl settings-container">
+          <div class="flex justify-between items-center p-4 border-b border-gray-200">
+            <h3 class="text-xl font-bold text-gray-800">Settings</h3>
+            <button id="close-settings" class="p-2 rounded-full hover:bg-gray-100">
+              <i class="fas fa-times text-gray-600"></i>
+            </button>
+          </div>
+          
+          <div class="p-4 overflow-y-auto">
+            <div class="border-b border-gray-200 pb-4">
+              <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+                <div>
+                  <h4 class="font-medium text-gray-800">Theme</h4>
+                  <p class="text-gray-500 text-sm">Choose your preferred display mode</p>
+                </div>
+                <select id="theme-selector" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="default">Default</option>
+                  <option value="gruvbox-light">Gruvbox Light</option>
+                  <option value="gruvbox-dark">Gruvbox Dark</option>
+                </select>
+              </div>
+              
+              <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+                <div>
+                  <h4 class="font-medium text-gray-800">Language</h4>
+                  <p class="text-gray-500 text-sm">Select your preferred language</p>
+                </div>
+                <select class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="en">English</option>
+                  <option value="es">Spanish</option>
+                  <option value="fr">French</option>
+                  <option value="de">German</option>
+                  <option value="ja">Japanese</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="border-b border-gray-200 py-4">
+              <h4 class="font-medium text-gray-800 mb-4">Notifications</h4>
+              
+              <div class="flex items-center justify-between mb-3">
+                <div>
+                  <p class="text-gray-700">Email notifications</p>
+                  <p class="text-gray-500 text-sm">Receive updates about file activity</p>
+                </div>
+                <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                  <input type="checkbox" name="email-notif" id="email-notif" checked class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                  <label for="email-notif" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                </div>
+              </div>
+              
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-gray-700">Push notifications</p>
+                  <p class="text-gray-500 text-sm">Get notified about important events</p>
+                </div>
+                <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                  <input type="checkbox" name="push-notif" id="push-notif" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                  <label for="push-notif" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="py-4">
+              <h4 class="font-medium text-gray-800 mb-4">Account Settings</h4>
+              
+              <div class="mb-4">
+                <label for="display-name" class="block text-gray-700 mb-1">Display Name</label>
+                <input type="text" id="display-name" value="User Account" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+              
+              <div class="mb-4">
+                <label for="email-address" class="block text-gray-700 mb-1">Email Address</label>
+                <input type="email" id="email-address" value="user@example.com" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+            </div>
+            
+            <div class="flex justify-end pt-4 border-t border-gray-200">
+              <button class="px-4 py-2 text-gray-600 border border-gray-300 rounded mr-2 hover:bg-gray-100">Cancel</button>
+              <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- File Upload Menu (Desktop) -->
+      <div id="file-menu" class="fixed left-4 top-20 rounded-lg shadow-lg z-20 w-56 hidden">
+        <ul class="py-2">
+          <li>
+            <label for="file-input-menu" class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+              <i class="fas fa-file-upload mr-3"></i>
+              <span>File upload</span>
+              <input type="file" id="file-input-menu" multiple hidden />
+            </label>
+          </li>
+          <li>
+            <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+              <i class="fas fa-folder mr-3"></i>
+              <span>Folder upload</span>
+            </a>
+          </li>
+          <li class="border-t">
+            <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+              <i class="fas fa-folder-plus mr-3"></i>
+              <span>New folder</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+              <i class="fas fa-file-alt mr-3"></i>
+              <span>New document</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- File Context Menu -->
+      <div id="context-menu" class="fixed rounded-lg shadow-lg z-30 w-48 hidden">
+        <ul class="py-2">
+          <li>
+            <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+              <i class="fas fa-download mr-3"></i>
+              <span>Download</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+              <i class="fas fa-share-alt mr-3"></i>
+              <span>Share</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+              <i class="fas fa-copy mr-3"></i>
+              <span>Make a copy</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+              <i class="fas fa-star mr-3"></i>
+              <span>Add to starred</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+              <i class="fas fa-pencil-alt mr-3"></i>
+              <span>Rename</span>
+            </a>
+          </li>
+          <li class="border-t">
+            <a href="#" class="flex items-center px-4 py-2 text-red-500 hover:bg-gray-100">
+              <i class="fas fa-trash-alt mr-3"></i>
+              <span>Remove</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script: Main logic with integrated modules -->
+  <script>
+    // Theme management
+    const themeManager = {
+      init() {
+        this.themeSelector = document.getElementById('theme-selector');
+        this.bindEvents();
+        this.loadSavedTheme();
+      },
+      bindEvents() {
+        if (this.themeSelector) {
+          this.themeSelector.addEventListener('change', () => {
+            this.setTheme(this.themeSelector.value);
+          });
+        }
+      },
+      loadSavedTheme() {
+        const savedTheme = localStorage.getItem('locci-drive-theme') || 'default';
+        this.setTheme(savedTheme);
+        if (this.themeSelector) {
+          this.themeSelector.value = savedTheme;
+        }
+      },
+      setTheme(theme) {
+        // Remove any existing theme classes
+        document.body.classList.remove('theme-gruvbox-light', 'theme-gruvbox-dark');
+        
+        // Add the selected theme class
+        if (theme !== 'default') {
+          document.body.classList.add(`theme-${theme}`);
+        }
+        
+        // Save the theme preference
+        localStorage.setItem('locci-drive-theme', theme);
+      }
+    };
+
+    // Main app module
+    const app = {
+      init() {
+        this.cacheDOM();
+        this.bindEvents();
+        this.initModules();
+        // Demo: auto-login after short delay
+        setTimeout(() => { this.login(); }, 1000);
+        
+        // Initialize sidebar state based on screen
+        this.initSidebarState();
+        window.addEventListener('resize', () => this.initSidebarState());
+      },
+      initModules() {
+        fileUploader.init();
+        fileManager.init();
+        viewController.init();
+        themeManager.init();
+      },
+      cacheDOM() {
+        this.loginScreen = document.getElementById('login-screen');
+        this.loginForm = document.getElementById('login-form');
+        this.mainApp = document.getElementById('main-app');
+        this.menuToggle = document.getElementById('menu-toggle');
+        this.sidebar = document.getElementById('sidebar');
+        this.closeSidebarBtn = document.getElementById('close-sidebar');
+        this.sidebarOverlay = document.getElementById('sidebar-overlay');
+        this.settingsModal = document.getElementById('settings-modal');
+        this.closeSettings = document.getElementById('close-settings');
+        this.settingsButton = document.getElementById('settings-button');
+        this.newFileBtn = document.getElementById('new-file-btn');
+        this.fileMenu = document.getElementById('file-menu');
+        this.mobileFileMenu = document.getElementById('mobile-file-menu');
+        this.fileInputMobile = document.getElementById('file-input-mobile');
+        this.userMenuBtn = document.getElementById('user-menu-button');
+        this.contextMenu = document.getElementById('context-menu');
+        this.mainContent = document.querySelector('.main-content');
+      },
+      bindEvents() {
+        this.loginForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.login();
+        });
+        
+        // Hamburger menu toggle
+        this.menuToggle.addEventListener('click', () => {
+          this.toggleSidebar();
+        });
+        
+        // Close sidebar button (mobile)
+        if (this.closeSidebarBtn) {
+          this.closeSidebarBtn.addEventListener('click', () => {
+            this.closeSidebar();
+          });
+        }
+        
+        // Close sidebar when clicking overlay (mobile)
+        this.sidebarOverlay.addEventListener('click', () => {
+          this.closeSidebar();
+        });
+        
+        this.settingsButton.addEventListener('click', () => {
+          this.settingsModal.classList.remove('hidden');
+        });
+        this.userMenuBtn.addEventListener('click', () => {
+          this.settingsModal.classList.remove('hidden');
+        });
+        this.closeSettings.addEventListener('click', () => {
+          this.settingsModal.classList.add('hidden');
+        });
+        
+        // New file button toggles dropdown
+        this.newFileBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          
+          // Check if we're on mobile
+          if (window.innerWidth < 768) {
+            // Toggle mobile file menu inside sidebar
+            this.mobileFileMenu.classList.toggle('hidden');
+          } else {
+            // Toggle desktop file menu
+            this.fileMenu.classList.toggle('hidden');
+          }
+        });
+        
+        // Mobile file input handling
+        if (this.fileInputMobile) {
+          this.fileInputMobile.addEventListener('change', (event) => {
+            if (event.target.files.length > 0) {
+              fileUploader.handleFileUpload(event.target.files[0]);
+              event.target.value = "";
+            }
+          });
+        }
+        
+        // Close dropdown if clicking outside the new file button or menu
+        window.addEventListener('click', (e) => {
+          // Desktop menu
+          if(!this.newFileBtn.contains(e.target) && !this.fileMenu.contains(e.target)){
+            this.fileMenu.classList.add('hidden');
+          }
+          
+          // Mobile menu (only if we're not clicking the new file button)
+          if(!this.newFileBtn.contains(e.target) && this.mobileFileMenu && !this.mobileFileMenu.contains(e.target)){
+            this.mobileFileMenu.classList.add('hidden');
+          }
+          
+          // Hide context menu if clicking outside
+          if(!this.contextMenu.contains(e.target) && this.contextMenu.classList.contains('block')){
+            this.contextMenu.classList.add('hidden');
+            this.contextMenu.classList.remove('block');
+          }
+          if(e.target === this.settingsModal){
+            this.settingsModal.classList.add('hidden');
+          }
+        });
+        
+        // Custom right-click context menu for file items
+        document.addEventListener('contextmenu', (e) => {
+          const fileItem = e.target.closest('.file-item');
+          if(fileItem){
+            e.preventDefault();
+            this.showContextMenu(e.pageX, e.pageY);
+          }
+        });
+      },
+      login() {
+        this.loginScreen.style.opacity = '0';
+        setTimeout(() => {
+          this.loginScreen.classList.add('hidden');
+          this.mainApp.classList.remove('hidden');
+        }, 1000);
+      },
+      showContextMenu(x, y) {
+        this.contextMenu.style.top = `${y}px`;
+        this.contextMenu.style.left = `${x}px`;
+        this.contextMenu.classList.remove('hidden');
+        this.contextMenu.classList.add('block');
+      },
+      initSidebarState() {
+        if (window.innerWidth < 768) {
+          // Mobile: Hide sidebar
+          this.sidebar.classList.remove('collapsed');
+          this.sidebar.classList.remove('open');
+          this.sidebarOverlay.classList.remove('active');
+          document.body.classList.remove('sidebar-open');
+          document.body.classList.remove('sidebar-collapsed');
+        } else {
+          // Desktop: Show sidebar with icons only
+          this.sidebar.classList.add('collapsed');
+          document.body.classList.add('sidebar-collapsed');
+          document.body.classList.remove('sidebar-open');
+        }
+        this.updateMainContentLayout();
+      },
+      toggleSidebar() {
+        if (window.innerWidth < 768) {
+          // Mobile: Toggle sidebar visibility
+          this.sidebar.classList.toggle('open');
+          this.sidebarOverlay.classList.toggle('active');
+        } else {
+          // Desktop: Toggle between full and icon-only sidebar
+          this.sidebar.classList.toggle('collapsed');
+          document.body.classList.toggle('sidebar-collapsed');
+          document.body.classList.toggle('sidebar-open');
+        }
+        this.updateMainContentLayout();
+      },
+      closeSidebar() {
+        this.sidebar.classList.remove('open');
+        this.sidebarOverlay.classList.remove('active');
+      },
+      updateMainContentLayout() {
+        // This is now handled by CSS directly
+      }
+    };
+
+    // File uploader module with integrated business logic
+    const fileUploader = {
+      init() {
+        this.cacheDOM();
+        this.bindEvents();
+        this.MAX_FILE_SIZE_MB = 15;
+      },
+      cacheDOM() {
+        this.fileInput = document.getElementById('file-input');
+        this.fileInputMenu = document.getElementById('file-input-menu');
+        this.uploadBox = document.getElementById('upload-box');
+        this.loadingSpinner = document.getElementById('loading-spinner');
+        this.errorMessage = document.getElementById('error-message');
+        this.clickToUpload = document.getElementById('click-to-upload');
+      },
+      bindEvents() {
+        // Only trigger file input when clicking the "Click to Upload" text
+        this.clickToUpload.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.fileInput.click();
+        });
+        
+        this.fileInput.addEventListener('change', (event) => {
+          if (event.target.files.length > 0) {
+            this.handleFileUpload(event.target.files[0]);
+            // Reset input so same file can be reselected
+            event.target.value = "";
+          }
+        });
+        
+        this.fileInputMenu.addEventListener('change', (event) => {
+          if (event.target.files.length > 0) {
+            this.handleFileUpload(event.target.files[0]);
+            event.target.value = "";
+          }
+        });
+        
+        // Drag & Drop Support
+        this.uploadBox.addEventListener('dragover', (event) => {
+          event.preventDefault();
+          this.uploadBox.classList.add('drag-over');
+        });
+        
+        this.uploadBox.addEventListener('dragleave', () => {
+          this.uploadBox.classList.remove('drag-over');
+        });
+        
+        this.uploadBox.addEventListener('drop', (event) => {
+          event.preventDefault();
+          this.uploadBox.classList.remove('drag-over');
+          const file = event.dataTransfer.files[0];
+          this.handleFileUpload(file);
+        });
+      },
+      async handleFileUpload(file) {
+        if (!file) return;
+        
+        if (file.size > this.MAX_FILE_SIZE_MB * 1024 * 1024) {
+          this.showError(`File size must be less than ${this.MAX_FILE_SIZE_MB}MB`);
+          return;
+        }
+        
+        this.loadingSpinner.classList.remove('hidden');
+        this.errorMessage.classList.add('hidden');
+        
+        try {
+          await this.uploadFile(file);
+        } catch (error) {
+          console.error('Error uploading file:', error);
+          this.showError("❌ Upload failed. Please try again.");
+        } finally {
+          this.loadingSpinner.classList.add('hidden');
+        }
+      },
+      async checkFileExists(filename, maxAttempts = 10, interval = 3000) {
+        let attempts = 0;
+        
+        return new Promise((resolve, reject) => {
+          const poll = async () => {
+            try {
+              // For demo purposes, we'll simulate a successful check
+            /*
+              console.log(`✅ File "${filename}" is available.`);
+              resolve(true);
+              return;
+              */
+              
+              // In production, uncomment this code:
+            //   /*
+              const response = await fetch(
+                `http://localhost:3489/check-file-upload/${filename}`
+              );
+              
+              if (response.ok) {
+                console.log(`✅ File "${filename}" is available.`);
+                resolve(true);
+                return;
+              }
+            //   */
+            } catch (error) {
+              console.error("Error checking file:", error);
+            }
+            
+            attempts++;
+            if (attempts < maxAttempts) {
+              setTimeout(poll, interval);
+            } else {
+              console.error(
+                `❌ File "${filename}" was not found after ${maxAttempts} attempts.`
+              );
+              reject(new Error("File not found within the given time."));
+            }
+          };
+          
+          poll();
+        });
+      },
+      async uploadFile(file) {
+        try {
+          // For demo purposes, we'll simulate a successful upload
+        /*
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          console.log(`✅ File "${file.name}" uploaded successfully.`);
+          
+          // Add the file to the file manager
+          fileManager.addFile({
+            id: 'file_' + Date.now() + Math.floor(Math.random() * 1000),
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            date: new Date()
+          });
+        */
+          
+          // In production, uncomment this code:
+        //   /*
+          const response = await fetch(
+            `http://localhost:3489/generate-presigned-url?filename=${file.name}&contentType=${file.type}`
+          );
+          const { data: { url } } = await response.json();
+          
+          const uploadResponse = await fetch(url, {
+            method: "PUT",
+            headers: { "Content-Type": file.type },
+            body: file,
+          });
+          
+          if (uploadResponse.ok) {
+            console.log(
+              "✅ File uploaded successfully. Checking if it's available..."
+            );
+            await this.checkFileExists(file.name);
+            
+            // Add the file to the file manager
+            fileManager.addFile({
+              id: 'file_' + Date.now() + Math.floor(Math.random() * 1000),
+              name: file.name,
+              size: file.size,
+              type: file.type,
+              date: new Date()
+            });
+          } else {
+            console.error("❌ Upload failed:", await uploadResponse.text());
+            throw new Error("Upload failed");
+          }
+        //   */
+        } catch (error) {
+          console.error("Error:", error);
+          throw error;
+        }
+      },
+      showError(message) {
+        this.errorMessage.textContent = message;
+        this.errorMessage.classList.remove('hidden');
+      }
+    };
+
+    // File manager module
+    const fileManager = {
+      files: [],
+      init() {
+        this.cacheDOM();
+      },
+      cacheDOM() {
+        this.filesContainer = document.getElementById('files-container');
+        this.gridView = document.getElementById('grid-view');
+      },
+      addFile(file) {
+        this.files.push(file);
+        this.renderFile(file);
+      },
+      renderFile(file) {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item px-4 py-2 border-b border-gray-100 flex items-center justify-between cursor-pointer';
+        
+        // Format file size
+        const sizeInKB = (file.size / 1024).toFixed(2);
+        const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+        const formattedSize = file.size > 1024 * 1024 ? `${sizeInMB} MB` : `${sizeInKB} KB`;
+        
+        // Format date
+        const date = new Date(file.date);
+        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        
+        fileItem.innerHTML = `
+          <div class="grid grid-cols-12 gap-4 w-full">
+            <div class="col-span-6 flex items-center">
+              <i class="fas fa-file text-blue-500 mr-3"></i>
+              <span>${file.name}</span>
+            </div>
+            <div class="col-span-2 text-gray-500 text-sm">${formattedSize}</div>
+            <div class="col-span-3 text-gray-500 text-sm">${formattedDate}</div>
+            <div class="col-span-1 text-right">
+              <button class="text-blue-500 hover:underline">Details</button>
+            </div>
+          </div>
+        `;
+        
+        this.filesContainer.appendChild(fileItem);
+      }
+    };
+
+    // View controller module for toggling list/grid views
+    const viewController = {
+      init() {
+        this.bindEvents();
+      },
+      bindEvents() {
+        document.getElementById('list-view-btn').addEventListener('click', () => {
+          document.getElementById('list-view').classList.remove('hidden');
+          document.getElementById('grid-view').classList.add('hidden');
+        });
+        document.getElementById('grid-view-btn').addEventListener('click', () => {
+          document.getElementById('grid-view').classList.remove('hidden');
+          document.getElementById('list-view').classList.add('hidden');
+        });
+      }
+    };
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      app.init();
+    });
+  </script>
+</body>
+</html>
